@@ -1,0 +1,165 @@
+// First Iteration
+
+users [icon: user] {
+  id string pk
+  username string
+  email string
+  password string
+  refreshToken string
+  createdAt Date
+  updatedAt Date
+}
+
+aboutMe [icon: microchip] {
+  id string pk
+  userReference ObjectId users
+  fullName string
+  professions string[]
+  introducingLine string
+  profilePicture string
+  primaryDescription string
+  secondaryDescription string
+  githubUrl string
+  linkedInUrl string
+  discordUrl string
+  twitterUrl string
+  mailToId string
+  createdAt Date
+  updatedAt Date
+}
+
+experience [icon: safari] {
+  id string pk
+  userReference ObjectId users
+  joiningDate Date
+  relievingDate Date
+  jobTitle string
+  organizationName string
+  responsibilities string[]
+  skillsInvolved string[]
+  createdAt Date
+  updatedAt Date    
+}
+
+wallOfCode [icon: tool] {
+  id string pk
+  userReference ObjectId users
+  skillName string
+  skillIcon string
+  createdAt Date
+  updatedAt Date
+}
+
+project [icon: gcp-project] {
+  id string pk
+  userReference ObjectId users
+  image string
+  name string
+  description string
+  skillsInvolved string[]
+  websiteUrl string
+  repositoryUrl string
+  createdAt Date
+  updatedAt Date
+}
+
+contactMe [icon: message-circle] {
+  id string pk
+  userReference ObjectId users
+  visitorName string
+  visitorEmail string
+  visitorPhone string
+  visitorMessage string
+  createdAt Date
+  updatedAt Date
+}
+
+users.id - aboutMe.userReference
+users.id < experience.userReference
+users.id < wallOfCode.userReference
+users.id < project.userReference
+users.id < contactMe.userReference
+
+
+
+// Second Iteration
+
+users [icon: user] {
+  id string pk
+  username string
+  email string
+  password string
+  profile ObjectId[] aboutMe
+  refreshToken string
+  createdAt Date
+  updatedAt Date
+}
+
+aboutMe [icon: microchip] {
+  id string pk
+  fullName string
+  professionalRoles string[]
+  introducingLine string
+  profilePicture string
+  primaryDescription string
+  secondaryDescription string
+  githubUrl string
+  linkedInUrl string
+  discordUrl string
+  twitterUrl string
+  mailToId string
+  listOfExperiences ObjectId[] experience
+  listOfWallOfCodeSkills ObjectId[] wallOfCode
+  listOfProjects ObjectId[] project
+  listOfPersonsContacted ObjectId[] contactMe
+  createdAt Date
+  updatedAt Date
+}
+
+experience [icon: safari] {
+  id string pk
+  joiningDate Date
+  relievingDate Date
+  jobTitle string
+  organizationName string
+  responsibilities string[]
+  skillsInvolved string[]
+  createdAt Date
+  updatedAt Date    
+}
+
+wallOfCode [icon: tool] {
+  id string pk
+  skillName string
+  skillIcon string
+  createdAt Date
+  updatedAt Date
+}
+
+project [icon: gcp-project] {
+  id string pk
+  image string
+  name string
+  description string
+  skillsInvolved string[]
+  websiteUrl string
+  repositoryUrl string
+  createdAt Date
+  updatedAt Date
+}
+
+contactMe [icon: message-circle] {
+  id string pk
+  visitorName string
+  visitorEmail string
+  visitorPhone string
+  visitorMessage string
+  createdAt Date
+  updatedAt Date
+}
+
+users.profile < aboutMe.id
+aboutMe.listOfExperiences < experience.id
+aboutMe.listOfWallOfCodeSkills < wallOfCode.id
+aboutMe.listOfProjects < project.id
+aboutMe.listOfPersonsContacted  < contactMe.id
