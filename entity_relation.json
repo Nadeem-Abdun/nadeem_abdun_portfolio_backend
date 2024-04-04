@@ -139,7 +139,7 @@ wallOfCode [icon: tool] {
 project [icon: gcp-project] {
   id string pk
   image string
-  name string
+  title string
   description string
   skillsInvolved string[]
   websiteUrl string
