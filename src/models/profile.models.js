@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const aboutMeSchema = new mongoose.Schema({
+const profileSchema = new mongoose.Schema({
     fullName: {
         type: String,
         required: true
@@ -69,6 +69,6 @@ const aboutMeSchema = new mongoose.Schema({
     ],
 }, { timestamps: true });
 
-const AboutMe = mongoose.model("AboutMe", aboutMeSchema);
+const Profile = mongoose.model("Profile", profileSchema);
 
-export default AboutMe;
+export default Profile;
