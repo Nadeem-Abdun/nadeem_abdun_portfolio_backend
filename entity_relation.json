@@ -237,6 +237,7 @@ contactMe [icon: message-circle] {
   visitorEmail string
   visitorPhone string
   visitorMessage string
+  userReplyMessage string
   createdAt Date
   updatedAt Date
 }
