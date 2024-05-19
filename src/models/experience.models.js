@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const experienceSchema = new mongoose.Schema({
+    profileId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile",
+        required: true,
+    },
     joiningDate: {
         type: Date,
         required: true
