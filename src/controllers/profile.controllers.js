@@ -3,21 +3,32 @@ import Profile from "../models/profile.models.js";
 import asyncHandler from "../utilities/AsyncHandler.utilities.js";
 import ApiResponse from "../utilities/ApiResponse.utilities.js";
 import ApiError from "../utilities/ApiError.utilities.js";
+import { uploadOnCloudinary } from "../utilities/Cloudinary.utilities.js";
 
 const createProfile = asyncHandler(async (req, res) => {
     const loggedInUser = req.user;
-    const { fullName, professionalRoles, introducingLine, profilePicture, primaryDescription, secondaryDescription, githubUrl, linkedInUrl, discordUrl, twitterUrl, mailToId } = req.body;
+    const { fullName, professionalRoles, introducingLine, primaryDescription, secondaryDescription, githubUrl, linkedInUrl, discordUrl, twitterUrl, mailToId } = req.body;
     if (!fullName) { throw new ApiError(400, "Full Name is required"); }
     if (professionalRoles.length <= 0) { throw new ApiError(400, "Atleast one Professional Role is required") }
     if (!introducingLine) { throw new ApiError(400, "Introductory Line is required"); }
-    if (!profilePicture) { throw new ApiError(400, "Profile Picture is required"); }
     if (!primaryDescription) { throw new ApiError(400, "Primary Profile Description is required"); }
     if (!secondaryDescription) { throw new ApiError(400, "Primary Profile Description is required"); }
+    const profilePic = req.file;
+    const profilePicLocalPath = profilePic?.path;
+    let uploadProfilePic;
+    if (profilePicLocalPath) {
+        uploadProfilePic = await uploadOnCloudinary(profilePicLocalPath);
+    } else {
+        throw new ApiError(500, "Error in uploading profile picture file to server or not provided, Please try again");
+    }
+    if (!uploadProfilePic || !uploadProfilePic.url) {
+        throw new ApiError(400, "Error in uploading the profile picture to cloudinary, Please try again.");
+    }
     const payload = await Profile.create({
         fullName: fullName,
         professionalRoles: professionalRoles,
         introducingLine: introducingLine,
-        profilePicture: profilePicture,
+        profilePicture: uploadProfilePic?.url,
         primaryDescription: primaryDescription,
         secondaryDescription: secondaryDescription,
         githubUrl: githubUrl,
@@ -45,16 +56,34 @@ const createProfile = asyncHandler(async (req, res) => {
 
 const updateProfile = asyncHandler(async (req, res) => {
     const { profileId } = req.params;
-    const { fullName, professionalRoles, introducingLine, profilePicture, primaryDescription, secondaryDescription, githubUrl, linkedInUrl, discordUrl, twitterUrl, mailToId } = req.body;
+    const { fullName, professionalRoles, introducingLine, primaryDescription, secondaryDescription, githubUrl, linkedInUrl, discordUrl, twitterUrl, mailToId } = req.body;
     if (!profileId) {
         throw new ApiError(400, "Profile id is not available, Please try again");
+    }
+    const profileDetails = await Profile.findById(profileId);
+    const existingProfilePicture = profileDetails?.profilePicture;
+    const profilePic = req.file;
+    const profilePicLocalPath = profilePic?.path;
+    let uploadProfilePic;
+    if (profilePicLocalPath) {
+        uploadProfilePic = await uploadOnCloudinary(profilePicLocalPath);
+    }
+    if ((profilePicLocalPath) && (!uploadProfilePic || !uploadProfilePic.url)) {
+        throw new ApiError(400, "Error in uploading the profile picture to cloudinary, Please try again.");
+    } else {
+        if (existingProfilePicture) {
+            await deleteFromCloudinary(existingProfilePicture);
+            console.info("Deleted existing profile picture from cloudinary.");
+        } else {
+            console.info("No existing profile picture found in cloudinary.");
+        }
     }
     const payload = await Profile.findByIdAndUpdate(profileId, {
         $set: {
             fullName: fullName,
             professionalRoles: professionalRoles,
             introducingLine: introducingLine,
-            profilePicture: profilePicture,
+            profilePicture: uploadProfilePic?.url,
             primaryDescription: primaryDescription,
             secondaryDescription: secondaryDescription,
             githubUrl: githubUrl,
