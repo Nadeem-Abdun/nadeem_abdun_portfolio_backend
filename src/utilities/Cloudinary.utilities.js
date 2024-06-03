@@ -1,6 +1,6 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
-import { CLOUDINARY_FOLDER_NAME } from "./constants.utilities";
+import { CLOUDINARY_FOLDER_NAME } from "./constants.utilities.js";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
