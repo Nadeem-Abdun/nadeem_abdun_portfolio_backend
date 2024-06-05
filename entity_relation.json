@@ -312,7 +312,7 @@ wallOfCode [icon: tool] {
 project [icon: gcp-project] {
   id string pk
   profileId ObjectId profile
-  image string
+  projectPicture string
   title string
   description string
   skillsInvolved string[]
