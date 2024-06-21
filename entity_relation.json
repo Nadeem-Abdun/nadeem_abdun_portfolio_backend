@@ -1,5 +1,4 @@
 // First Iteration
-
 users [icon: user] {
   id string pk
   username string
@@ -81,9 +80,7 @@ users.id < project.userReference
 users.id < contactMe.userReference
 
 
-
 // Second Iteration
-
 users [icon: user] {
   id string pk
   username string
@@ -139,7 +136,7 @@ wallOfCode [icon: tool] {
 project [icon: gcp-project] {
   id string pk
   image string
-  name string
+  title string
   description string
   skillsInvolved string[]
   websiteUrl string
@@ -163,3 +160,187 @@ aboutMe.listOfExperiences < experience.id
 aboutMe.listOfWallOfCodeSkills < wallOfCode.id
 aboutMe.listOfProjects < project.id
 aboutMe.listOfPersonsContacted  < contactMe.id
+
+
+// Third Iteration
+users [icon: user] {
+  id string pk
+  username string
+  email string
+  password string
+  profile ObjectId[] aboutMe
+  refreshToken string
+  createdAt Date
+  updatedAt Date
+}
+
+aboutMe [icon: microchip] {
+  id string pk
+  fullName string
+  professionalRoles string[]
+  introducingLine string
+  profilePicture string
+  primaryDescription string
+  secondaryDescription string
+  githubUrl string
+  linkedInUrl string
+  discordUrl string
+  twitterUrl string
+  mailToId string
+  listOfExperiences ObjectId[] experience
+  listOfWallOfCodeSkills ObjectId[] wallOfCode
+  listOfProjects ObjectId[] project
+  listOfPersonsContacted ObjectId[] contactMe
+  createdAt Date
+  updatedAt Date
+}
+
+experience [icon: safari] {
+  id string pk
+  profileId ObjectId aboutMe
+  joiningDate Date
+  relievingDate Date
+  jobTitle string
+  organizationName string
+  responsibilities string[]
+  skillsInvolved string[]
+  createdAt Date
+  updatedAt Date    
+}
+
+wallOfCode [icon: tool] {
+  id string pk
+  profileId ObjectId aboutMe
+  skillName string
+  skillIcon string
+  createdAt Date
+  updatedAt Date
+}
+
+project [icon: gcp-project] {
+  id string pk
+  profileId ObjectId aboutMe
+  image string
+  title string
+  description string
+  skillsInvolved string[]
+  websiteUrl string
+  repositoryUrl string
+  createdAt Date
+  updatedAt Date
+}
+
+contactMe [icon: message-circle] {
+  id string pk
+  profileId ObjectId aboutMe
+  visitorName string
+  visitorEmail string
+  visitorPhone string
+  visitorMessage string
+  userReplyMessage string
+  createdAt Date
+  updatedAt Date
+}
+
+users.profile < aboutMe.id
+aboutMe.listOfExperiences < experience.id
+aboutMe.listOfWallOfCodeSkills < wallOfCode.id
+aboutMe.listOfProjects < project.id
+aboutMe.listOfPersonsContacted  < contactMe.id
+
+experience.profileId > aboutMe.id
+wallOfCode.profileId > aboutMe.id
+project.profileId > aboutMe.id
+contactMe.profileId > aboutMe.id
+
+
+// Fourth Iteration
+users [icon: user] {
+  id string pk
+  username string
+  email string
+  password string
+  profiles ObjectId[] profile
+  refreshToken string
+  createdAt Date
+  updatedAt Date
+}
+
+profile [icon: microchip] {
+  id string pk
+  fullName string
+  professionalRoles string[]
+  introducingLine string
+  profilePicture string
+  primaryDescription string
+  secondaryDescription string
+  githubUrl string
+  linkedInUrl string
+  discordUrl string
+  twitterUrl string
+  mailToId string
+  listOfExperiences ObjectId[] experience
+  listOfWallOfCodeSkills ObjectId[] wallOfCode
+  listOfProjects ObjectId[] project
+  listOfPersonsContacted ObjectId[] contactMe
+  createdAt Date
+  updatedAt Date
+}
+
+experience [icon: safari] {
+  id string pk
+  profileId ObjectId profile
+  joiningDate Date
+  relievingDate Date
+  jobTitle string
+  organizationName string
+  responsibilities string[]
+  skillsInvolved string[]
+  createdAt Date
+  updatedAt Date    
+}
+
+wallOfCode [icon: tool] {
+  id string pk
+  profileId ObjectId profile
+  skillName string
+  skillIcon string
+  createdAt Date
+  updatedAt Date
+}
+
+project [icon: gcp-project] {
+  id string pk
+  profileId ObjectId profile
+  projectPicture string
+  title string
+  description string
+  skillsInvolved string[]
+  websiteUrl string
+  repositoryUrl string
+  createdAt Date
+  updatedAt Date
+}
+
+contactMe [icon: message-circle] {
+  id string pk
+  profileId ObjectId profile
+  visitorName string
+  visitorEmail string
+  visitorPhone string
+  visitorMessage string
+  userReplyMessage string
+  createdAt Date
+  updatedAt Date
+}
+
+users.profiles < profile.id
+profile.listOfExperiences < experience.id
+profile.listOfWallOfCodeSkills < wallOfCode.id
+profile.listOfProjects < project.id
+profile.listOfPersonsContacted  < contactMe.id
+
+experience.profileId > profile.id
+wallOfCode.profileId > profile.id
+project.profileId > profile.id
+contactMe.profileId > profile.id
