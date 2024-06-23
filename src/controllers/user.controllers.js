@@ -41,7 +41,7 @@ const loginUser = asyncHandler(async (req, res) => {
     if (!checkCredentials) {
         throw new ApiError(401, "Invalid credentials. Please try again with valid credentials.");
     }
-    const { accessToken, refreshToken } = generateTokens(userData._id);
+    const { accessToken, refreshToken } = await generateTokens(userData._id);
     const payload = await User.findById(userData._id).select("-password -refreshToken");
     const cookieOptions = {
         httpOnly: true,
