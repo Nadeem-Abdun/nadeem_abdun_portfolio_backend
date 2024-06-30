@@ -45,8 +45,10 @@ const loginUser = asyncHandler(async (req, res) => {
     const payload = await User.findById(userData._id).select("-password -refreshToken");
     const cookieOptions = {
         httpOnly: true,
-        secure: true
-    }
+        secure: true,
+        sameSite: process.env.COOKIE_ACCESS_ORIGIN,
+        path: process.env.COOKIE_ACCESS_PATH,
+    };
     return res
         .status(200)
         .cookie("accessToken", accessToken, cookieOptions)
@@ -66,8 +68,10 @@ const logoutUser = asyncHandler(async (req, res) => {
     }
     const cookieOptions = {
         httpOnly: true,
-        secure: true
-    }
+        secure: true,
+        sameSite: process.env.COOKIE_ACCESS_ORIGIN,
+        path: process.env.COOKIE_ACCESS_PATH,
+    };
     return res
         .status(200)
         .clearCookie("accessToken", cookieOptions)
@@ -76,7 +80,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const incomingRefreshToken = req.cookie?.refreshToken || req.body?.refreshToken || req.header("Re-Authorization")?.replace("Bearer ", "");
+    const incomingRefreshToken = req.cookies?.refreshToken || req.body?.refreshToken || req.header("Re-Authorization")?.replace("Bearer ", "");
     if (!incomingRefreshToken) {
         throw new ApiError(400, "Unauthorized request, Token not found, Please try again");
     }
@@ -92,8 +96,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const payload = await User.findById(userData._id).select("-password -refreshToken");
     const cookieOptions = {
         httpOnly: true,
-        secure: true
-    }
+        secure: true,
+        sameSite: process.env.COOKIE_ACCESS_ORIGIN,
+        path: process.env.COOKIE_ACCESS_PATH,
+    };
     return res
         .status(200)
         .cookie("accessToken", accessToken, cookieOptions)
