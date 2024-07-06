@@ -105,7 +105,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         .cookie("accessToken", accessToken, cookieOptions)
         .cookie("refreshToken", refreshToken, cookieOptions)
         .json(new ApiResponse(200, "Access token renewal successful", payload));
-
 });
 
 const updatePassword = asyncHandler(async (req, res) => {
