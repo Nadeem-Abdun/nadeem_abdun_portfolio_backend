@@ -12,7 +12,7 @@ const createProfile = asyncHandler(async (req, res) => {
     if (professionalRoles.length <= 0) { throw new ApiError(400, "Atleast one Professional Role is required") }
     if (!introducingLine) { throw new ApiError(400, "Introductory Line is required"); }
     if (!primaryDescription) { throw new ApiError(400, "Primary Profile Description is required"); }
-    if (!secondaryDescription) { throw new ApiError(400, "Primary Profile Description is required"); }
+    if (!secondaryDescription) { throw new ApiError(400, "Secondary Profile Description is required"); }
     const profilePic = req.file;
     const profilePicLocalPath = profilePic?.path;
     let uploadProfilePic;
