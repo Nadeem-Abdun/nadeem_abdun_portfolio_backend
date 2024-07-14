@@ -7,12 +7,14 @@ import { uploadOnCloudinary } from "../utilities/Cloudinary.utilities.js";
 
 const createProfile = asyncHandler(async (req, res) => {
     const loggedInUser = req.user;
-    const { fullName, professionalRoles, introducingLine, primaryDescription, secondaryDescription, githubUrl, linkedInUrl, discordUrl, twitterUrl, mailToId } = req.body;
+    const { fullName, introducingLine, primaryDescription, secondaryDescription, githubUrl, linkedInUrl, discordUrl, twitterUrl, mailToId } = req.body;
+    let { professionalRoles } = req.body;
     if (!fullName) { throw new ApiError(400, "Full Name is required"); }
     if (professionalRoles.length <= 0) { throw new ApiError(400, "Atleast one Professional Role is required") }
     if (!introducingLine) { throw new ApiError(400, "Introductory Line is required"); }
     if (!primaryDescription) { throw new ApiError(400, "Primary Profile Description is required"); }
     if (!secondaryDescription) { throw new ApiError(400, "Secondary Profile Description is required"); }
+    if (professionalRoles) { professionalRoles = JSON.parse(professionalRoles); }
     const profilePic = req.file;
     const profilePicLocalPath = profilePic?.path;
     let uploadProfilePic;
