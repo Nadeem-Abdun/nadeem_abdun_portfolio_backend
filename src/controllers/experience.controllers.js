@@ -72,7 +72,7 @@ const getExperience = asyncHandler(async (req, res) => {
 
 const getAllExperience = asyncHandler(async (req, res) => {
     const { profileId } = req.params;
-    if (!id) { throw new ApiError(400, "Profile Id is required, Please provide profile id to continue.") }
+    if (!profileId) { throw new ApiError(400, "Profile Id is required, Please provide profile id to continue.") }
     const payload = await Experience.find({ profileId: profileId });
     if (!payload) { throw new ApiError(500, "Error in fetching the experience list, Please try again.") }
     return res
