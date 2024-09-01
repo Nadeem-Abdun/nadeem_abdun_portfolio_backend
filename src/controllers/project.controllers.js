@@ -101,4 +101,14 @@ const getProject = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Project fetched successfully.", payload));
 });
 
-export { createProject, updateProject, deleteProject, getProject }
+const getAllProjects = asyncHandler(async (req, res) => {
+    const { profileId } = req.params;
+    if (!profileId) { throw new ApiError(400, "Profile Id is required, Please provide profile id to continue.") }
+    const payload = await Project.find({ profileId: profileId });
+    if (!payload) { throw new ApiError(500, "Error in getting the projects, Please try again.") }
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Projects fetched successfully.", payload));
+});
+
+export { createProject, updateProject, deleteProject, getProject, getAllProjects }
