@@ -3,7 +3,7 @@ import Project from "../models/project.models.js";
 import asyncHandler from "../utilities/AsyncHandler.utilities.js";
 import ApiResponse from "../utilities/ApiResponse.utilities.js";
 import ApiError from "../utilities/ApiError.utilities.js";
-import { uploadOnCloudinary } from "../utilities/Cloudinary.utilities.js";
+import { uploadOnCloudinary, deleteFromCloudinary } from "../utilities/Cloudinary.utilities.js";
 
 const createProject = asyncHandler(async (req, res) => {
     const { profileId } = req.params;
