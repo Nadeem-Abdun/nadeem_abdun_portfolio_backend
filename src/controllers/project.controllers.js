@@ -86,6 +86,13 @@ const deleteProject = asyncHandler(async (req, res) => {
     if (!id) { throw new ApiError(400, "Project Id is required, Please provide project id to continue.") }
     const payload = await Project.findByIdAndDelete(id);
     if (!payload) { throw new ApiError(500, "Error in deleting the project, Please try again.") }
+    const existingProjectPicture = payload?.projectPicture;
+    if (existingProjectPicture) {
+        await deleteFromCloudinary(existingProjectPicture);
+        console.info("Deleted existing project picture from cloudinary.");
+    } else {
+        console.info("No existing project picture found in cloudinary.");
+    }
     const updateProfile = await Profile.findByIdAndUpdate(payload.profileId, { $pull: { listOfProjects: payload._id } }, { new: true });
     if (!updateProfile) { throw new ApiError(500, "Error in updating the profile, Please try again.") }
     return res
