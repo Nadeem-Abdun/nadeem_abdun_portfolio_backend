@@ -44,11 +44,13 @@ const createProject = asyncHandler(async (req, res) => {
 
 const updateProject = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { title, description, skillsInvolved, websiteUrl, repositoryUrl } = req.body;
+    const { title, description, websiteUrl, repositoryUrl } = req.body;
+    let { skillsInvolved } = req.body;
     if (!id) { throw new ApiError(400, "Project Id is required, Please provide project id to continue.") }
     if (!title) { throw new ApiError(400, "Project Title is required, Please provide title to continue.") }
     if (!description) { throw new ApiError(400, "Project Description is required, Please provide description to continue.") }
-    if (skillsInvolved.length < 1) { throw new ApiError(400, "Skills Involved are required, Please provide skills to continue.") }
+    if (skillsInvolved) { skillsInvolved = JSON.parse(skillsInvolved); }
+    if (skillsInvolved.length <= 0) { throw new ApiError(400, "Skills Involved are required, Please provide skills to continue.") }
     const projectDetails = await Project.findById(id);
     const existingProjectPicture = projectDetails?.projectPicture;
     const projectPic = req.file;
