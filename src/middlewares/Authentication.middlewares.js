@@ -5,7 +5,7 @@ import User from "../models/user.models.js";
 
 const verifyUserAccess = asyncHandler(async (req, res, next) => {
     try {
-        const userToken = req.cookie?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
+        const userToken = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
         if (!userToken) {
             throw new ApiError(401, "Unauthorized Request, Access Token Not Found");
         }

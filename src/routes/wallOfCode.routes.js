@@ -8,8 +8,8 @@ const router = Router();
 router.route("/getSkills/:profileId").get(getSkills)
 
 // Protected Routes
-router.route("create/:profileId").post(verifyUserAccess, createSkill);
-router.route("update/:id").put(verifyUserAccess, updateSkill);
-router.route("delete/:id").delete(verifyUserAccess, deleteSkill);
+router.route("/create/:profileId").post(verifyUserAccess, createSkill);
+router.route("/update/:id").put(verifyUserAccess, updateSkill);
+router.route("/delete/:id").delete(verifyUserAccess, deleteSkill);
 
 export default router;

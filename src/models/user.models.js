@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -38,11 +39,11 @@ userSchema.pre("save", async function (next) {
     }
 });
 
-userSchema.method.isPasswordCorrect = async function (password) {
+userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
 
-userSchema.method.generateAccessToken = async function () {
+userSchema.methods.generateAccessToken = async function () {
     return await jwt.sign(
         {
             _id: this._id,
@@ -53,10 +54,10 @@ userSchema.method.generateAccessToken = async function () {
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
-    )
+    );
 }
 
-userSchema.method.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = async function () {
     return await jwt.sign(
         {
             _id: this._id
@@ -65,7 +66,7 @@ userSchema.method.generateRefreshToken = async function () {
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY
         }
-    )
+    );
 }
 
 const User = mongoose.model("User", userSchema);

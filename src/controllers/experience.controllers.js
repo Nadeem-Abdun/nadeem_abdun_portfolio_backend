@@ -70,4 +70,14 @@ const getExperience = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, "Experience fetched successfully.", payload));
 });
 
-export { createExperience, updateExperience, deleteExperience, getExperience }
+const getAllExperience = asyncHandler(async (req, res) => {
+    const { profileId } = req.params;
+    if (!profileId) { throw new ApiError(400, "Profile Id is required, Please provide profile id to continue.") }
+    const payload = await Experience.find({ profileId: profileId });
+    if (!payload) { throw new ApiError(500, "Error in fetching the experience list, Please try again.") }
+    return res
+        .status(200)
+        .json(new ApiResponse(200, "Experience list fetched successfully.", payload))
+});
+
+export { createExperience, updateExperience, deleteExperience, getExperience, getAllExperience }
