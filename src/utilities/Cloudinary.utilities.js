@@ -14,7 +14,7 @@ const uploadOnCloudinary = async (localFilePath) => {
             return "No file path provided";
         }
         const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "image",
+            resource_type: "auto",
             folder: CLOUDINARY_FOLDER_NAME
         });
         return response;
@@ -44,7 +44,7 @@ const deleteFromCloudinary = async (filePathOnCloudinary) => {
         const publicId = extractPublicId(filePathOnCloudinary);
         // Deleting the file using public ID
         const response = cloudinary.api.delete_resources([publicId], {
-            resource_type: "image",
+            resource_type: "auto",
             type: "upload",
         });
         return response;
