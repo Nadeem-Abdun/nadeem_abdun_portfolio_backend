@@ -42,6 +42,7 @@ import experienceRouter from "./routes/experience.routes.js";
 import projectRouter from "./routes/project.routes.js";
 import wallOfCodeRouter from "./routes/wallOfCode.routes.js";
 import contactMeRouter from "./routes/contactMe.routes.js";
+import resumeRouter from "./routes/resume.routes.js";
 
 app.use(`${API_V1_BASEPATH}/users`, userRouter);
 app.use(`${API_V1_BASEPATH}/profile`, profileRouter);
@@ -49,5 +50,6 @@ app.use(`${API_V1_BASEPATH}/experience`, experienceRouter);
 app.use(`${API_V1_BASEPATH}/project`, projectRouter);
 app.use(`${API_V1_BASEPATH}/wallOfCode`, wallOfCodeRouter);
 app.use(`${API_V1_BASEPATH}/contactMe`, contactMeRouter);
+app.use(`${API_V1_BASEPATH}/resume`, resumeRouter);
 
 export { app }
