@@ -13,7 +13,7 @@ const uploadResume = asyncHandler(async (req, res) => {
     const resumeFilePath = resumeFile?.path;
     let uploadedResumeFile;
     if (resumeFilePath) {
-        uploadedResumeFile = await uploadOnCloudinary(resumeFilePath);
+        uploadedResumeFile = await uploadOnCloudinary(resumeFilePath, "raw");
     } else {
         throw new ApiError(500, "Error in uploading resume file to server or file not provided, Please try again");
     }
@@ -96,7 +96,7 @@ const deleteResume = asyncHandler(async (req, res) => {
     const resumeURL = existingResume?.resumeURL;
     let deleteResume;
     if (resumeURL) {
-        deleteResume = await deleteFromCloudinary(resumeURL);
+        deleteResume = await deleteFromCloudinary(resumeURL, "raw");
     }
     if (!deleteResume) {
         throw new ApiError(500, "Error in deleting resume file from cloudinary, Please try again.")
