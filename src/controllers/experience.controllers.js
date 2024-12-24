@@ -6,13 +6,14 @@ import ApiError from "../utilities/ApiError.utilities.js";
 
 const createExperience = asyncHandler(async (req, res) => {
     const { profileId } = req.params;
-    const { joiningDate, relievingDate, jobTitle, organizationName, responsibilities, skillsInvolved } = req.body;
+    const { joiningDate, relievingDate, jobTitle, organizationName, responsibilities, skillsInvolved, experienceStatus } = req.body;
     if (!profileId) { throw new ApiError(400, "Profile Id is required, Please provide profile id to continue.") }
     if (!joiningDate) { throw new ApiError(400, "Joining Date is required, Please provide joining date to continue.") }
     if (!jobTitle) { throw new ApiError(400, "Job Title is required, Please provide job title to continue.") }
     if (!organizationName) { throw new ApiError(400, "Organization Name is required, Please provide organization name to continue.") }
     if (responsibilities.length < 1) { throw new ApiError(400, "Responsibilities is required, Please provide responsibilities to continue.") }
     if (skillsInvolved.length < 1) { throw new ApiError(400, "Skills Involved is required, Please provide skills involved to continue.") }
+    if (!experienceStatus) { throw new ApiError(400, "Experience Status is required, Please provide experience status to continue.") }
     const payload = await Experience.create({
         profileId: profileId,
         joiningDate: joiningDate,
@@ -21,6 +22,7 @@ const createExperience = asyncHandler(async (req, res) => {
         organizationName: organizationName,
         responsibilities: responsibilities,
         skillsInvolved: skillsInvolved,
+        experienceStatus: experienceStatus,
     });
     if (!payload) { throw new ApiError(500, "Error in creating the experience, Please try again.") }
     const updateProfile = await Profile.findByIdAndUpdate(profileId, { $push: { listOfExperiences: payload._id } }, { new: true });
@@ -32,7 +34,7 @@ const createExperience = asyncHandler(async (req, res) => {
 
 const updateExperience = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { joiningDate, relievingDate, jobTitle, organizationName, responsibilities, skillsInvolved } = req.body;
+    const { joiningDate, relievingDate, jobTitle, organizationName, responsibilities, skillsInvolved, experienceStatus } = req.body;
     if (!id) { throw new ApiError(400, "Experience Id is required, Please provide experience id to continue.") }
     const payload = await Experience.findByIdAndUpdate(id, {
         joiningDate: joiningDate,
@@ -41,6 +43,7 @@ const updateExperience = asyncHandler(async (req, res) => {
         organizationName: organizationName,
         responsibilities: responsibilities,
         skillsInvolved: skillsInvolved,
+        experienceStatus: experienceStatus,
     }, { new: true });
     if (!payload) { throw new ApiError(500, "Error in updating the experience, Please try again.") }
     return res
