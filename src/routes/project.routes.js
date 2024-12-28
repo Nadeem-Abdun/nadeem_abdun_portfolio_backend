@@ -7,10 +7,10 @@ const router = Router();
 
 // Un-Protected Routes
 router.route("/get/:id").get(getProject);
+router.route("/getAll/:profileId").get(getAllProjects);
 
 // Protected Routes
 router.route("/create/:profileId").post(verifyUserAccess, upload.single("projectPicture"), createProject);
-router.route("/getAll/:profileId").get(verifyUserAccess, getAllProjects);
 router.route("/update/:id").put(verifyUserAccess, upload.single("projectPicture"), updateProject);
 router.route("/delete/:id").delete(verifyUserAccess, deleteProject);
 
