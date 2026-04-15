@@ -10,9 +10,13 @@ const registerUser = asyncHandler(async (req, res) => {
     if (!username || !email || !password) {
         throw new ApiError(400, "All input fields are required. Please fill in all fields.");
     }
-    const existingUserCheck = await User.findOne({ email: email });
-    if (existingUserCheck) {
-        throw new ApiError(409, "User already exists. Please log in instead of signing up.");
+    const existingUsernameCheck = await User.findOne({ username: username });
+    if (existingUsernameCheck) {
+        throw new ApiError(409, "Username already exists. Please try again with a different username or log in instead of signing up.");
+    }
+    const existingEmailCheck = await User.findOne({ email: email });
+    if (existingEmailCheck) {
+        throw new ApiError(409, "Email already exists. Please try again with a different email or log in instead of signing up.");
     }
     const newUser = await User.create({
         username: username,
@@ -119,7 +123,7 @@ const updatePassword = asyncHandler(async (req, res) => {
         throw new ApiError(400, "The old password you have entered is incorrect, Please try again");
     }
     userData.password = newPassword;
-    userData.save();
+    await userData.save();
     const payload = await User.findById(userData._id).select("-password -refreshToken");
     return res
         .status(200)
@@ -139,6 +143,14 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     if (!username || !email) {
         throw new ApiError(400, "Input field cannot be empty. Please fill them in to continue");
     }
+    const existingUserCheck = await User.findOne({ username: username });
+    if (existingUserCheck) {
+        throw new ApiError(409, "Username already exists. Please try again with a different username.");
+    }
+    const existingEmailCheck = await User.findOne({ email: email });
+    if (existingEmailCheck) {
+        throw new ApiError(409, "Email already exists. Please try again with a different email.");
+    }
     const payload = await User.findByIdAndUpdate(loggedInUser._id, { $set: { username: username, email: email } }, { new: true }).select("-password -refreshToken");
     if (!payload) {
         throw new ApiError(500, "Error occurred while updating account details, Please try again");
@@ -154,8 +166,8 @@ const getPortfolioProfile = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Username is missing/not provided, please try again");
     }
     const payload = await User.findOne({ username: username }).select("profile");
-    if (!payload) {
-        throw new ApiError(500, "Error occurred while fetching portfolio profile, Please try again");
+    if (payload === null || payload === undefined) {
+        throw new ApiError(404, "Portfolio profile not found, Please try again");
     }
     return res
         .status(200)
