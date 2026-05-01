@@ -34,6 +34,11 @@ const experienceSchema = new mongoose.Schema({
             required: true
         }
     ],
+    experienceStatus: {
+        type: String,
+        enum: ["Active", "InActive"],
+        default: "InActive"
+    }
 }, { timestamps: true });
 
 const Experience = mongoose.model("Experience", experienceSchema);

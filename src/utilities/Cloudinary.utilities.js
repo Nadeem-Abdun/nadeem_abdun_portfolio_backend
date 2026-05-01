@@ -8,13 +8,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const uploadOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath, resourceType) => {
     try {
         if (!localFilePath) {
             return "No file path provided";
         }
         const response = await cloudinary.uploader.upload(localFilePath, {
-            resource_type: "image",
+            resource_type: resourceType,
             folder: CLOUDINARY_FOLDER_NAME
         });
         return response;
@@ -30,7 +30,7 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
-const deleteFromCloudinary = async (filePathOnCloudinary) => {
+const deleteFromCloudinary = async (filePathOnCloudinary, resourceType) => {
     try {
         // Function to extract the public ID from the Cloudinary URL
         function extractPublicId(filePathOnCloudinary) {
@@ -44,7 +44,7 @@ const deleteFromCloudinary = async (filePathOnCloudinary) => {
         const publicId = extractPublicId(filePathOnCloudinary);
         // Deleting the file using public ID
         const response = cloudinary.api.delete_resources([publicId], {
-            resource_type: "image",
+            resource_type: resourceType,
             type: "upload",
         });
         return response;

@@ -6,10 +6,10 @@ const router = Router();
 
 // Un-Protected Routes
 router.route("/get/:id").get(getExperience);
+router.route("/getAll/:profileId").get(getAllExperience);
 
 // Protected Routes
 router.route("/create/:profileId").post(verifyUserAccess, createExperience);
-router.route("/getAll/:profileId").get(verifyUserAccess, getAllExperience);
 router.route("/update/:id").put(verifyUserAccess, updateExperience);
 router.route("/delete/:id").delete(verifyUserAccess, deleteExperience);
 

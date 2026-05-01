@@ -7,18 +7,19 @@ import { uploadOnCloudinary, deleteFromCloudinary } from "../utilities/Cloudinar
 
 const createProject = asyncHandler(async (req, res) => {
     const { profileId } = req.params;
-    const { title, description, websiteUrl, repositoryUrl } = req.body;
+    const { title, description, websiteUrl, repositoryUrl, projectStatus } = req.body;
     let { skillsInvolved } = req.body;
     if (!profileId) { throw new ApiError(400, "Profile Id is required, Please provide profile id to continue.") }
     if (!title) { throw new ApiError(400, "Project Title is required, Please provide title to continue.") }
     if (!description) { throw new ApiError(400, "Project Description is required, Please provide description to continue.") }
     if (skillsInvolved) { skillsInvolved = JSON.parse(skillsInvolved); }
     if (skillsInvolved.length <= 0) { throw new ApiError(400, "Skills Involved are required, Please provide skills to continue.") }
+    if (!projectStatus) { throw new ApiError(400, "Project Status is required, Please provide project status to continue.") }
     const projectPic = req.file;
     const projectPicLocalPath = projectPic?.path;
     let uploadProjectImage;
     if (projectPicLocalPath) {
-        uploadProjectImage = await uploadOnCloudinary(projectPicLocalPath);
+        uploadProjectImage = await uploadOnCloudinary(projectPicLocalPath, "image");
     } else {
         throw new ApiError(500, "Error in uploading project picture file to server or not provided, Please try again");
     }
@@ -33,6 +34,7 @@ const createProject = asyncHandler(async (req, res) => {
         skillsInvolved: skillsInvolved,
         websiteUrl: websiteUrl,
         repositoryUrl: repositoryUrl,
+        projectStatus: projectStatus,
     });
     if (!payload) { throw new ApiError(500, "Error in creating the project, Please try again.") }
     const updateProfile = await Profile.findByIdAndUpdate(profileId, { $push: { listOfProjects: payload._id } }, { new: true });
@@ -44,26 +46,27 @@ const createProject = asyncHandler(async (req, res) => {
 
 const updateProject = asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const { title, description, websiteUrl, repositoryUrl } = req.body;
+    const { title, description, websiteUrl, repositoryUrl, projectStatus } = req.body;
     let { skillsInvolved } = req.body;
     if (!id) { throw new ApiError(400, "Project Id is required, Please provide project id to continue.") }
     if (!title) { throw new ApiError(400, "Project Title is required, Please provide title to continue.") }
     if (!description) { throw new ApiError(400, "Project Description is required, Please provide description to continue.") }
     if (skillsInvolved) { skillsInvolved = JSON.parse(skillsInvolved); }
     if (skillsInvolved.length <= 0) { throw new ApiError(400, "Skills Involved are required, Please provide skills to continue.") }
+    if (!projectStatus) { throw new ApiError(400, "Project Status is required, Please provide project status to continue.") }
     const projectDetails = await Project.findById(id);
     const existingProjectPicture = projectDetails?.projectPicture;
     const projectPic = req.file;
     const projectPicLocalPath = projectPic?.path;
     let uploadProjectImage;
     if (projectPicLocalPath) {
-        uploadProjectImage = await uploadOnCloudinary(projectPicLocalPath);
+        uploadProjectImage = await uploadOnCloudinary(projectPicLocalPath, "image");
     }
     if ((projectPicLocalPath) && (!uploadProjectImage || !uploadProjectImage.url)) {
         throw new ApiError(400, "Error in uploading the project picture to cloudinary, Please try again.");
     } else {
         if (existingProjectPicture) {
-            await deleteFromCloudinary(existingProjectPicture);
+            await deleteFromCloudinary(existingProjectPicture, "image");
             console.info("Deleted existing project picture from cloudinary.");
         } else {
             console.info("No existing project picture found in cloudinary.");
@@ -76,6 +79,7 @@ const updateProject = asyncHandler(async (req, res) => {
         skillsInvolved: skillsInvolved,
         websiteUrl: websiteUrl,
         repositoryUrl: repositoryUrl,
+        projectStatus: projectStatus,
     }, { new: true });
     if (!payload) { throw new ApiError(500, "Error in updating the project, Please try again.") }
     return res
@@ -90,7 +94,7 @@ const deleteProject = asyncHandler(async (req, res) => {
     if (!payload) { throw new ApiError(500, "Error in deleting the project, Please try again.") }
     const existingProjectPicture = payload?.projectPicture;
     if (existingProjectPicture) {
-        await deleteFromCloudinary(existingProjectPicture);
+        await deleteFromCloudinary(existingProjectPicture, "image");
         console.info("Deleted existing project picture from cloudinary.");
     } else {
         console.info("No existing project picture found in cloudinary.");

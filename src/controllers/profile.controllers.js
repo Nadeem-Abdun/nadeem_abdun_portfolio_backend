@@ -3,7 +3,7 @@ import Profile from "../models/profile.models.js";
 import asyncHandler from "../utilities/AsyncHandler.utilities.js";
 import ApiResponse from "../utilities/ApiResponse.utilities.js";
 import ApiError from "../utilities/ApiError.utilities.js";
-import { uploadOnCloudinary } from "../utilities/Cloudinary.utilities.js";
+import { uploadOnCloudinary, deleteFromCloudinary } from "../utilities/Cloudinary.utilities.js";
 
 const createProfile = asyncHandler(async (req, res) => {
     const loggedInUser = req.user;
@@ -19,7 +19,7 @@ const createProfile = asyncHandler(async (req, res) => {
     const profilePicLocalPath = profilePic?.path;
     let uploadProfilePic;
     if (profilePicLocalPath) {
-        uploadProfilePic = await uploadOnCloudinary(profilePicLocalPath);
+        uploadProfilePic = await uploadOnCloudinary(profilePicLocalPath, "image");
     } else {
         throw new ApiError(500, "Error in uploading profile picture file to server or not provided, Please try again");
     }
@@ -65,13 +65,13 @@ const updateProfile = asyncHandler(async (req, res) => {
     const profilePicLocalPath = profilePic?.path;
     let uploadProfilePic;
     if (profilePicLocalPath) {
-        uploadProfilePic = await uploadOnCloudinary(profilePicLocalPath);
+        uploadProfilePic = await uploadOnCloudinary(profilePicLocalPath, "image");
     }
     if ((profilePicLocalPath) && (!uploadProfilePic || !uploadProfilePic.url)) {
         throw new ApiError(400, "Error in uploading the profile picture to cloudinary, Please try again.");
     } else {
         if (existingProfilePicture) {
-            await deleteFromCloudinary(existingProfilePicture);
+            await deleteFromCloudinary(existingProfilePicture, "image");
             console.info("Deleted existing profile picture from cloudinary.");
         } else {
             console.info("No existing profile picture found in cloudinary.");

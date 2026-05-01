@@ -29,6 +29,11 @@ const projectSchema = new mongoose.Schema({
     repositoryUrl: {
         type: String
     },
+    projectStatus: {
+        type: String,
+        enum: ["Active", "InActive"],
+        default: "InActive"
+    }
 }, { timestamps: true });
 
 const Project = mongoose.model("Project", projectSchema);
